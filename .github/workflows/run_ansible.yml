@@ -1,0 +1,30 @@
+name: Run Ansible
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build & Deploy
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{secrets.SSH_HOST}}
+          USER_NAME: ${{secrets.USER_NAME}}
+          VAULT_PASSWORD: ${{secrets.VAULT_PASSWORD}}
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          echo "$VAULT_PASSWORD" > vault_password && chmod 600 vault_password
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              cd devops-vse-ansible/ansible/ &&
+              ansible-playbook ec2_deploy.yml --vault-password-file vault_password.txt --user ec2-user --key-file ../test.pem
+              '
