@@ -2,7 +2,9 @@ name: Run Ansible
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   Deploy:
@@ -26,4 +28,3 @@ jobs:
               cd devops-vse-ansible/ansible/ &&
               ansible-playbook ec2_deploy.yml --vault-password-file vault_password.txt --user ec2-user --key-file ../test.pem
               '
-
