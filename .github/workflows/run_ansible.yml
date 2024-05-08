@@ -24,6 +24,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
               cd devops-vse-ansible/ansible/ &&
-              ansible-playbook ec2_deploy.yml --vault-password-file vault_password --user ec2-user --key-file ../test.pem
+              ansible-playbook ec2_deploy.yml --vault-password-file vault_password.txt --user ec2-user --key-file ../test.pem
               '
 
